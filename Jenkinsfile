@@ -12,8 +12,9 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout scm // Checkout (git clone ...) the project's repository
-            }
+                 checkout([$class: 'GitSCM', 
+                 branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Romeoteni188/JenkinsPython.git']]])
+                 }
         }
         stage('Setup') {
             steps {
