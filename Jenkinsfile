@@ -1,67 +1,74 @@
+
 pipeline {
-    
+    agent any
+
     stages {
         stage('Checkout') {
             steps {
-                 checkout([$class: 'GitSCM', 
-                 branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Romeoteni188/JenkinsPython.git']]])
-                 }
+                checkout([$class: 'GitSCM', 
+                branches: [[name: '*/main']], 
+                userRemoteConfigs: [[url: 'https://github.com/Romeoteni188/JenkinsPython.git']]])
+            }
         }
+
         stage('Setup') {
             steps {
                 script {
-                    sh 
+                    // Crear un entorno virtual y instalar las dependencias
+                    sh '''
                     python -m venv venv
-                    source venv/bin/activate
-                    pip install -r requirements.txt
-                    
+                    venv/bin/pip install -r requirements.txt
+                    '''
                 }
             }
         }
+
         stage('Linting') {
             steps {
                 script {
-                    sh """
-                    pylint **/*.py
-                    """
+                    sh '''
+                    venv/bin/pylint **/*.py
+                    '''
                 }
             }
         }
+
         stage('Unit Testing') {
             steps {
                 script {
-                    sh """
-                    python -m unittest discover -s tests/unit
-                    """
+                    sh '''
+                    venv/bin/python -m unittest discover -s tests/unit
+                    '''
                 }
             }
         }
+
         stage('Integration Testing') {
             steps {
                 script {
-                    sh 
-                    python -m unittest discover -s tests/integration
-                    
+                    sh '''
+                    venv/bin/python -m unittest discover -s tests/integration
+                    '''
                 }
             }
         }
-    }
-    post {
-        failure {
-            script {
-                msg = "Build error for ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
-                slackSend message: msg, channel: env.SLACK_CHANNEL
-            }
-        }
-    }
-    stages {
+
         stage('Build') {
             steps {
                 ansiColor('xterm') {
-                    sh 'echo "Compilacion exitosa..!"'
+                    sh 'echo "Compilación exitosa..!"'
                 }
             }
         }
     }
 
+    post {
+        failure {
+            script {
+                def msg = "Build error for ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
+                slackSend message: msg, channel: env.SLACK_CHANNEL
+            }
+        }
+    }
 }
+
