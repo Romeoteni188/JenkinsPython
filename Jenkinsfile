@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -16,8 +15,7 @@ pipeline {
                 script {
                     // Crear un entorno virtual y instalar las dependencias
                     sh '''
-                    python -m venv venv
-                    python3 -m venv venv3
+                    python3 -m venv venv
                     venv/bin/pip install -r requirements.txt
                     '''
                 }
@@ -29,7 +27,6 @@ pipeline {
                 script {
                     sh '''
                     venv/bin/pylint **/*.py
-                    venv3/bin/pylint **/*.py
                     '''
                 }
             }
@@ -40,7 +37,6 @@ pipeline {
                 script {
                     sh '''
                     venv/bin/python -m unittest discover -s tests/unit
-                    venv3/bin/python -m unittest discover -s tests/unit
                     '''
                 }
             }
@@ -51,7 +47,6 @@ pipeline {
                 script {
                     sh '''
                     venv/bin/python -m unittest discover -s tests/integration
-                    ven3v/bin/python -m unittest discover -s tests/integration
                     '''
                 }
             }
@@ -65,7 +60,4 @@ pipeline {
             }
         }
     }
-
-    
 }
-
