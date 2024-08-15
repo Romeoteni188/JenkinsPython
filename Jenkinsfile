@@ -13,6 +13,15 @@ pipeline {
         stage('Setup') {
             steps {
                 script {
+                    // Instalar python3-venv si no está instalado
+                    sh '''
+                    if ! dpkg -l | grep -q python3-venv; then
+                        echo "python3-venv no está instalado. Instalando..."
+                        sudo apt-get update
+                        sudo apt-get install -y python3-venv
+                    fi
+                    '''
+                    
                     // Crear un entorno virtual y instalar las dependencias
                     sh '''
                     python3 -m venv venv
