@@ -1,6 +1,6 @@
 pipeline {
     agent any
-
+       // agente prueba
     stages {
         stage('Checkout') {
             steps {
@@ -17,8 +17,8 @@ pipeline {
                     sh '''
                     if ! dpkg -l | grep -q python3-venv; then
                         echo "python3-venv no está instalado. Instalando..."
-                        sudo apt-get update
-                        sudo apt-get install -y python3-venv
+                        sudo apt update -y
+                        sudo apt install -y python3-venv
                     fi
                     '''
                     
@@ -64,7 +64,7 @@ pipeline {
         stage('Build') {
             steps {
                 ansiColor('xterm') {
-                    sh 'echo "Compilación exitosa..!"'
+                    sh 'echo "Compilación exitosa..!!"'
                 }
             }
         }
