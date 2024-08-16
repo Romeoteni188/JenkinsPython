@@ -1,7 +1,21 @@
 pipeline {
     agent any
-       // agente prueba
     stages {
+        stage('Check and Install Git') {
+            steps {
+                script {
+                    // Verificar si Git está instalado y si no, instalarlo
+                    sh '''
+                    if ! git --version >/dev/null 2>&1; then
+                        echo "Git no está instalado. Instalando..."
+                        sudo apt update -y
+                        sudo apt install -y git
+                    fi
+                    '''
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout([$class: 'GitSCM', 
