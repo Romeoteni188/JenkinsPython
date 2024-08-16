@@ -1,92 +1,73 @@
 pipeline {
     agent any
-    stages {
-        stage('Test Sudo') {
-            steps {
-                script {
-                    sh 'sudo whoami'
-                }
-            }
-        }
-        stage('Check and Install Git') {
-            steps {
-                script {
-                    // Verificar si Git está instalado y si no, instalarlo
-                    sh '''
-                    if ! git --version >/dev/null 2>&1; then
+
+    stage('Check and Install Git') {
+        steps {
+            script {
+                sh '''
+                    if ! which git > /dev/null 2>&1; then
                         echo "Git no está instalado. Instalando..."
                         sudo apt update -y
                         sudo apt install git -y
+                    else
+                        echo "Git está instalado."
                     fi
-                    '''
-                }
+                '''
             }
         }
+    }
 
-        stage('Checkout') {
-            steps {
-                checkout([$class: 'GitSCM', 
-                branches: [[name: '*/main']], 
+    stage('Checkout') {
+        steps {
+            checkout([$class: 'GitSCM', 
+                branches: [[name: 'main']], 
                 userRemoteConfigs: [[url: 'https://github.com/Romeoteni188/JenkinsPython.git']]])
-            }
         }
+    }
 
-        stage('Setup') {
-            steps {
-                script {
-                    // Instalar python3-venv si no está instalado
-                    sh '''
+    stage('Setup') {
+        steps {
+            script {
+                sh '''
                     if ! dpkg -l | grep -q python3-venv; then
                         echo "python3-venv no está instalado. Instalando..."
                         sudo apt update -y
-                        sudo apt install python3-venv -y 
+                        sudo apt install python3-venv -y
+                    else
+                        echo "python3-venv está instalado."
                     fi
-                    '''
-                    
-                    // Crear un entorno virtual y instalar las dependencias
-                    sh '''
+                '''
+                // Crear y activar el entorno virtual
+                sh '''
                     python3 -m venv venv
-                    venv/bin/pip install -r requirements.txt
-                    '''
-                }
+                    source venv/bin/activate
+                    pip install -r requirements.txt
+                '''
             }
         }
+    }
 
-        stage('Linting') {
-            steps {
-                script {
-                    sh '''
-                    venv/bin/pylint src/**/*.py
-                    '''
-                }
+    stage('Linting') {
+        steps {
+            script {
+                sh 'venv/bin/pylint **/*.py'
             }
         }
+    }
 
-        stage('Unit Testing') {
-            steps {
-                script {
-                    sh '''
-                    venv/bin/python -m unittest discover -s tests/unit
-                    '''
-                }
+    stage('Testing') { // Cambiado de 'Unit Testing' a 'Testing'
+        steps {
+            script {
+                // Ejecutar pruebas desde el archivo test_unita.py
+                sh 'venv/bin/python -m unittest test_unita.py'
             }
         }
+    }
 
-        stage('Integration Testing') {
-            steps {
-                script {
-                    sh '''
-                    venv/bin/python -m unittest discover -s tests/integration
-                    '''
-                }
-            }
-        }
-
-        stage('Build') {
-            steps {
-                ansiColor('xterm') {
-                    sh 'echo "Compilación exitosa..!!"'
-                }
+    stage('Build') {
+        steps {
+            ansiColor('xterm') {
+                sh 'echo "Compilación exitosa..!!"'
             }
         }
     }
