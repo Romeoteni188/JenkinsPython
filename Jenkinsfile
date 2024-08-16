@@ -16,7 +16,7 @@ pipeline {
                     if ! git --version >/dev/null 2>&1; then
                         echo "Git no está instalado. Instalando..."
                         sudo apt update -y
-                        sudo apt install -y git
+                        sudo apt install git -y
                     fi
                     '''
                 }
@@ -39,7 +39,7 @@ pipeline {
                     if ! dpkg -l | grep -q python3-venv; then
                         echo "python3-venv no está instalado. Instalando..."
                         sudo apt update -y
-                        sudo apt install -y python3-venv
+                        sudo apt install python3-venv -y 
                     fi
                     '''
                     
