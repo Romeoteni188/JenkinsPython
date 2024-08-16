@@ -7,6 +7,7 @@ pipeline {
                     sh 'sudo whoami'
                 }
             }
+        }
         stage('Check and Install Git') {
             steps {
                 script {
