@@ -1,6 +1,12 @@
 pipeline {
     agent any
     stages {
+        stage('Test Sudo') {
+            steps {
+                script {
+                    sh 'sudo whoami'
+                }
+            }
         stage('Check and Install Git') {
             steps {
                 script {
