@@ -41,4 +41,36 @@ pipeline {
         stage('Testing') {
             when {
                 expression {
-                   
+                    return params.RUN_TESTS // Solo ejecuta si RUN_TESTS es true
+                }
+            }
+            steps {
+                // Ejecuta las pruebas unitarias
+                sh '''
+                . venv/bin/activate
+                python3 -m unittest discover -s tests
+                '''
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Construye o empaqueta la aplicación
+                echo 'Build successful'
+            }
+        }
+    }
+
+    post {
+        always {
+            // Limpia el workspace después de la ejecución del pipeline
+            cleanWs()
+        }
+        success {
+            echo 'Pipeline completado exitosamente.'
+        }
+        failure {
+            echo 'El pipeline falló.'
+        }
+    }
+}
