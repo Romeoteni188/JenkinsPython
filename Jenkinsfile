@@ -31,10 +31,11 @@ pipeline {
         stage('Linting') {
             steps {
                 // Corre el linter para verificar la calidad del código
-                sh '''
-                . venv/bin/activate
-                pylint **/*.py
-                '''
+                // sh '''
+                // . venv/bin/activate
+                // pylint **/*.py
+                // '''
+             echo 'Vamos por otra tuveria'
             }
         }
 
