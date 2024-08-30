@@ -35,7 +35,7 @@ pipeline {
                 // . venv/bin/activate
                 // pylint **/*.py
                 // '''
-             echo 'Vamos por otra tuveria'
+                echo 'linting'
             }
         }
 
@@ -46,10 +46,10 @@ pipeline {
                 }
             }
             steps {
-                // Ejecuta las pruebas unitarias
+                // Ejecuta las pruebas unitarias directamente en el archivo test_unita.py
                 sh '''
                 . venv/bin/activate
-                python3 -m unittest discover -s tests
+                python3 -m unittest test_unita
                 '''
             }
         }
