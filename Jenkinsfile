@@ -54,7 +54,7 @@ pipeline {
                 // Ejecuta las pruebas unitarias
                 sh '''
                 . venv/bin/activate
-                python -m unittest discover -s tests
+                python3 -m unittest discover -s tests
                 '''
             }
         }
