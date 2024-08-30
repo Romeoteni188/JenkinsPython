@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  # postgres:
+  #   image: postgres:15
+  #   container_name: contenedor_postgres
+  #   environment:
+  #     POSTGRES_PASSWORD: chocolate
+  #   ports:
+  #     - "5432:5432"
+
+  mi-libro:
+    image: mi-libro:latest
+    container_name: mi-libro-container
+    ports:
+      - "200:8080"
+    depends_on:
+      - postgres
+
+  # jenkins:
+  #   image: jenkins/jenkins:latest
+  #   container_name: jenkins-container
+  #   ports:
+  #     - "8081:8080"
+  #   volumes:
+  #     - jenkins_home:/var/jenkins_home
+
+  dependency-track:
+    image: dependencytrack/bundled:latest
+    container_name: dependency-track
+    ports:
+      - "90:8080"
+
+volumes:
+  jenkins_home:
