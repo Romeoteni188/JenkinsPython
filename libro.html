@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Libro</title>
+</head>
+<body>
+    <h1>Agregar Libro</h1>
+    <form method="POST">
+        <label for="categoria">Categoría:</label>
+        <input type="text" id="categoria" name="categoria" required><br><br>
+
+        <label for="genero">Género:</label>
+        <input type="text" id="genero" name="genero" required><br><br>
+
+        <label for="fecha">Fecha:</label>
+        <input type="text" id="fecha" name="fecha" required><br><br>
+
+        <label for="monto">Monto:</label>
+        <input type="text" id="monto" name="monto" required><br><br>
+
+        <input type="submit" value="Agregar">
+    </form>
+    <a href="{{ url_for('index') }}">Volver al Inventario</a>
+</body>
+</html>

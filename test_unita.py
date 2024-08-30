@@ -1,49 +1,21 @@
+# test_libro.py
 import unittest
-from datetime import datetime
+from libro import agregar_libro
 
-class TestSistemaInventarioLibros(unittest.TestCase):
+class TestLibro(unittest.TestCase):
 
-    def test_fecha_formato_valido(self):
-        # Caso válido
-        fecha_valida = "15/08/2023"
-        try:
-            datetime.strptime(fecha_valida, '%d/%m/%Y')
-            resultado = True
-        except ValueError:
-            resultado = False
-        self.assertTrue(resultado)
+    def setUp(self):
+        # Configuración inicial para cada prueba
+        self.inventario = []
 
-    def test_fecha_formato_invalido(self):
-        # Caso inválido
-        fecha_invalida = "31-12-2023"
-        try:
-            datetime.strptime(fecha_invalida, '%d/%m/%Y')
-            resultado = True
-        except ValueError:
-            resultado = False
-        self.assertFalse(resultado)
-
-    def test_monto_numerico(self):
-        # Prueba que el monto sea un número válido
-        monto = "100.50"
-        try:
-            monto = float(monto)
-            resultado = True
-        except ValueError:
-            resultado = False
-        self.assertTrue(resultado)
-
-    def test_categoria_seleccionada(self):
-        # Verifica que la categoría seleccionada sea válida
-        categorias = ["Ingenieria", "Literatura", "Administración", "Matematica"]
-        categoria_seleccionada = "Ingenieria"
-        self.assertIn(categoria_seleccionada, categorias)
-
-    def test_genero_seleccionado(self):
-        # Verifica que el género seleccionado sea válido
-        generos = ["Femenino", "Masculino"]
-        genero_seleccionado = "Femenino"
-        self.assertIn(genero_seleccionado, generos)
+    def test_agregar_libro(self):
+        # Prueba para agregar un libro
+        resultado = agregar_libro(self.inventario, "Ingeniería", "Femenino", "01/01/2024", 10.0)
+        self.assertEqual(len(resultado), 1)
+        self.assertEqual(resultado[0]['Categoría'], "Ingeniería")
+        self.assertEqual(resultado[0]['Género'], "Femenino")
+        self.assertEqual(resultado[0]['Fecha'], "01/01/2024")
+        self.assertEqual(resultado[0]['Monto'], 10.0)
 
 if __name__ == '__main__':
     unittest.main()

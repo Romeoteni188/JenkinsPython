@@ -1,64 +1,74 @@
 pipeline {
     agent any
-    stages {
-        stage('Check Git') {
-            steps {
-                script {
-                    sh '''
-                        if ! which git > /dev/null 2>&1; then
-                            echo "Error: Git no está instalado."
-                            exit 1
-                        else
-                            echo "Git está instalado."
-                        fi
-                    '''
-                }
-            }
-        }
 
+    // Definición de parámetros
+    parameters {
+        string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch de Git a usar')
+        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: '¿Ejecutar pruebas unitarias?')
+    }
+
+    stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM', 
-                    branches: [[name: 'main']], 
-                    userRemoteConfigs: [[url: 'https://github.com/Romeoteni188/JenkinsPython.git']]])
+                // Clona el repositorio desde el branch especificado
+                git url: 'https://github.com/Romeoteni188/JenkinsPython.git', branch: "${params.BRANCH_NAME}"
             }
         }
 
         stage('Setup') {
             steps {
-                script {
-                    // Suponiendo que python3-venv ya está instalado
-                    sh '''
-                        python3 -m venv venv
-                        venv/bin/pip install -r requirements.txt
-                    '''
-                }
+                // Configura el entorno virtual y las dependencias
+                sh '''
+                python -m venv venv
+                . venv/bin/activate
+                pip install -r requirements.txt
+                '''
             }
         }
 
         stage('Linting') {
             steps {
-                script {
-                    //sh 'venv/bin/pylint **/*.py'
-                    sh 'find . -name "*.py" | xargs venv/bin/pylint'
-                }
+                // Corre el linter para verificar la calidad del código
+                sh '''
+                . venv/bin/activate
+                pylint **/*.py
+                '''
             }
         }
 
         stage('Testing') {
-            steps {
-                script {
-                    sh 'venv/bin/python -m unittest test_unita.py'
+            when {
+                expression {
+                    return params.RUN_TESTS // Solo ejecuta si RUN_TESTS es true
                 }
+            }
+            steps {
+                // Ejecuta las pruebas unitarias
+                sh '''
+                . venv/bin/activate
+                python -m unittest discover -s tests
+                '''
             }
         }
 
         stage('Build') {
             steps {
-                ansiColor('xterm') {
-                    sh 'echo "Compilación exitosa..!!"'
-                }
+                // Construye o empaqueta la aplicación
+                echo 'Build successful'
             }
+        }
+    }
+
+    post {
+        always {
+            // Limpia el workspace después de la ejecución del pipeline
+            cleanWs()
+        }
+        success {
+            echo 'Pipeline completado exitosamente.'
+        }
+        failure {
+            echo 'El pipeline falló.'
         }
     }
 }
