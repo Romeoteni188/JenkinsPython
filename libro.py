@@ -10,6 +10,16 @@ inventario = [
     {"Categoría": "Curiosidades", "Género": "Masculino", "Fecha": "04/02/2024", "Monto": 135.0}
 ]
 
+def agregar_libro(inventario, categoria, genero, fecha, monto):
+    nuevo_libro = {
+        "Categoría": categoria,
+        "Género": genero,
+        "Fecha": fecha,
+        "Monto": monto
+    }
+    inventario.append(nuevo_libro)
+    return inventario
+
 @app.route('/')
 def index():
     return render_template('index.html', inventario=inventario)
@@ -22,13 +32,7 @@ def add_book():
         fecha = request.form['fecha']
         monto = float(request.form['monto'])
         
-        nuevo_libro = {
-            "Categoría": categoria,
-            "Género": genero,
-            "Fecha": fecha,
-            "Monto": monto
-        }
-        inventario.append(nuevo_libro)
+        agregar_libro(inventario, categoria, genero, fecha, monto)
         return redirect(url_for('index'))
     
     return render_template('libro.html')
