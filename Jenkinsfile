@@ -39,7 +39,8 @@ pipeline {
         stage('Linting') {
             steps {
                 script {
-                    sh 'venv/bin/pylint **/*.py'
+                    //sh 'venv/bin/pylint **/*.py'
+                    sh 'find . -name "*.py" | xargs venv/bin/pylint'
                 }
             }
         }
