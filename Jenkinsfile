@@ -19,11 +19,10 @@ pipeline {
             steps {
                 // Configura el entorno virtual y las dependencias
                 sh '''
-                # Verifica si Python 3 está instalado y lo instala si no lo está
+                # Verifica si Python 3 está instalado (sin sudo)
                 if ! command -v python3 &> /dev/null; then
-                    echo "Python 3 no está instalado. Instalando..."
-                    sudo apt-get update
-                    sudo apt-get install -y python3 python3-venv python3-pip
+                    echo "Python 3 no está instalado. Por favor, instálalo en el agente Jenkins."
+                    exit 1
                 fi
                 
                 # Configura el entorno virtual con python3
