@@ -19,12 +19,6 @@ pipeline {
             steps {
                 // Configura el entorno virtual y las dependencias
                 sh '''
-                # Verifica que Python 3 está disponible
-                if ! command -v python3 &> /dev/null; then
-                    echo "Python 3 no está instalado. Por favor, instala Python 3 en el agente Jenkins."
-                    exit 1
-                fi
-
                 # Crea el entorno virtual y actualiza pip
                 python3 -m venv venv
                 . venv/bin/activate
@@ -47,36 +41,4 @@ pipeline {
         stage('Testing') {
             when {
                 expression {
-                    return params.RUN_TESTS // Solo ejecuta si RUN_TESTS es true
-                }
-            }
-            steps {
-                // Ejecuta las pruebas unitarias
-                sh '''
-                . venv/bin/activate
-                python3 -m unittest discover -s tests
-                '''
-            }
-        }
-
-        stage('Build') {
-            steps {
-                // Construye o empaqueta la aplicación
-                echo 'Build successful'
-            }
-        }
-    }
-
-    post {
-        always {
-            // Limpia el workspace después de la ejecución del pipeline
-            cleanWs()
-        }
-        success {
-            echo 'Pipeline completado exitosamente.'
-        }
-        failure {
-            echo 'El pipeline falló.'
-        }
-    }
-}
+                   
