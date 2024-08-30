@@ -17,19 +17,12 @@ pipeline {
 
         stage('Setup') {
             steps {
-                // Instala y configura Python 3, y crea el entorno virtual
+                // Configura el entorno virtual y las dependencias
                 sh '''
-                # Verifica si Python 3 está instalado, si no, lo instala
+                # Verifica que Python 3 está disponible
                 if ! command -v python3 &> /dev/null; then
-                    echo "Python 3 no está instalado. Instalando..."
-                    sudo apt-get update
-                    sudo apt-get install -y python3 python3-venv python3-pip
-                fi
-
-                # Verifica si el entorno virtual se puede crear con python3-venv
-                if ! dpkg -l | grep -qw python3-venv; then
-                    echo "python3-venv no está instalado. Instalando..."
-                    sudo apt-get install -y python3-venv
+                    echo "Python 3 no está instalado. Por favor, instala Python 3 en el agente Jenkins."
+                    exit 1
                 fi
 
                 # Crea el entorno virtual y actualiza pip
