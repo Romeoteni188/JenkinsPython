@@ -67,7 +67,7 @@ pipeline {
             // Limpia el workspace después de la ejecución del pipeline
             cleanWs()
              // Detiene y elimina los contenedores Docker usando Docker Compose
-            sh 'docker-compose down'
+            // sh 'docker-compose up'
         }
         success {
             echo 'Pipeline completado exitosamente.'
