@@ -7,8 +7,8 @@ pipeline {
                     sh '''
                         if ! which git > /dev/null 2>&1; then
                             echo "Git no está instalado. Instalando..."
-                            sudo apt update -y
-                            sudo apt install git -y
+                            apt update -y
+                            apt install git -y
                         else
                             echo "Git está instalado."
                         fi
@@ -31,8 +31,8 @@ pipeline {
                     sh '''
                         if ! dpkg -l | grep -q python3-venv; then
                             echo "python3-venv no está instalado. Instalando..."
-                            sudo apt update -y
-                            sudo apt install python3-venv -y
+                            apt update -y
+                            apt install python3-venv -y
                         else
                             echo "python3-venv está instalado."
                         fi
@@ -40,8 +40,7 @@ pipeline {
                     // Crear y activar el entorno virtual
                     sh '''
                         python3 -m venv venv
-                        source venv/bin/activate
-                        pip install -r requirements.txt
+                        venv/bin/pip install -r requirements.txt
                     '''
                 }
             }
