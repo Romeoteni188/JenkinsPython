@@ -58,9 +58,12 @@ pipeline {
         }
 
         stage('Run Dependency Track') {
-            steps {
-                // Ejecuta el segundo pipeline
-                build load: 'Jenkinsfile2', wait: true
+                steps {
+                    // Ejecuta el segundo pipeline
+                        script{
+                            load: 'Jenkinsfile3'
+                    }
+                }      
             }
         }
 
@@ -74,7 +77,9 @@ pipeline {
          stage('Run Pandoc') {
             steps {
                 // Ejecuta el segundo pipeline
-                build load: 'Jenkinsfile3', wait: true
+               script{
+                    load: 'Jenkinsfile3'
+               }
             }               
         }
 
