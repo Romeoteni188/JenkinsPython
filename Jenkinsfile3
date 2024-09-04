@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Convert XML to PDF') {
+            steps {
+                // Ejecutar Pandoc para convertir XML a PDF
+                sh '''
+                    docker run --rm -v $(pwd)/workspace:/workspace pandoc/core pandoc /workspace/generated.xml -o /workspace/output.pdf
+                    cp /workspace/output.pdf ./output.pdf
+                '''
+            }
+        }
+
+        stage('Stop Services') {
+            steps {
+                // Si tienes servicios que necesitan ser detenidos, hazlo aquí
+                // Si no es necesario, puedes eliminar esta etapa
+                sleep(time: 10, unit: 'MINUTES')
+                // Detener y eliminar los contenedores (esto es opcional y depende de tu flujo de trabajo)
+                // sh 'docker-compose down'
+            }
+        }
+    }
+
+    post {
+        always {
+            // Limpiar el espacio de trabajo después de la ejecución
+            cleanWs()
+        }
+        success {
+            echo 'Conversión de XML a PDF completada exitosamente.'
+        }
+        failure {
+            echo 'La conversión de XML a PDF falló.'
+        }
+    }
+}

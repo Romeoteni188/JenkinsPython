@@ -31,10 +31,6 @@ pipeline {
         stage('Linting') {
             steps {
                 // Corre el linter para verificar la calidad del código
-                // sh '''
-                // . venv/bin/activate
-                // pylint **/*.py
-                // '''
                 echo 'linting'
             }
         }
@@ -60,14 +56,33 @@ pipeline {
                 echo 'Build successful'
             }
         }
+
+        stage('Run Dependency Track') {
+            steps {
+                // Ejecuta el segundo pipeline
+                build job: 'DependencyTrackPipeline', wait: true
+            }
+        }
+
+        stage('Wait for 4 Minutes') {
+            steps {
+                // Espera 4 minutos antes de ejecutar el siguiente pipeline
+                sleep(time: 4, unit: 'MINUTES')
+            }
+        }
+
+        stage('Convert XML to PDF with Pandoc') {
+            steps {
+                // Ejecuta el tercer pipeline
+                build job: 'ConvertXMLtoPDFPipeline', wait: true
+            }
+        }
     }
 
     post {
         always {
             // Limpia el workspace después de la ejecución del pipeline
             cleanWs()
-             // Detiene y elimina los contenedores Docker usando Docker Compose
-            // sh 'docker-compose up'
         }
         success {
             echo 'Pipeline completado exitosamente.'

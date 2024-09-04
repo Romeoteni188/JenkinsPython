@@ -1,35 +1,42 @@
 version: '3.8'
 
 services:
-  # postgres:
-  #   image: postgres:15
-  #   container_name: contenedor_postgres
-  #   environment:
-  #     POSTGRES_PASSWORD: chocolate
-  #   ports:
-  #     - "5432:5432"
-
-  mi-libro:
-    image: mi-libro:latest
-    container_name: mi-libro-container
-    ports:
-      - "200:8080"
-    depends_on:
-      - postgres
-
-  # jenkins:
-  #   image: jenkins/jenkins:latest
-  #   container_name: jenkins-container
-  #   ports:
-  #     - "8081:8080"
-  #   volumes:
-  #     - jenkins_home:/var/jenkins_home
-
-  dependency-track:
+  dependencytrack:
     image: dependencytrack/bundled:latest
-    container_name: dependency-track
+    container_name: dependencytrack
     ports:
-      - "90:8080"
+      - "8080:8080" # Ajusta el puerto si es necesario
+    environment:
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/dependencytrack
+      - DATABASE_USERNAME=dependencytrack
+      - DATABASE_PASSWORD=dependencytrack
+    volumes:
+      - /home/romeo188/dependencytrack/xml_output:/data/xml_output
+    networks:
+      - red-tigo
 
-volumes:
-  jenkins_home:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=dependencytrack
+      - POSTGRES_PASSWORD=dependencytrack
+      - POSTGRES_DB=dependencytrack
+    ports:
+      - "5432:5432" # Ajusta el puerto si es necesario
+    networks:
+      - red-tigo
+
+  pandoc:
+    image: pandoc/core:latest
+    container_name: pandoc
+    networks:
+      - red-tigo
+    volumes:
+      - /home/romeo188/dependencytrack/xml_output:/workspace
+    entrypoint: [ "sleep", "infinity" ]  # Mantiene el contenedor en ejecución para uso manual
+    # Puedes ajustar el entrypoint o comando si tienes un script para convertir automáticamente el archivo XML a PDF
+
+networks:
+  my-network:
+    driver: bridge
