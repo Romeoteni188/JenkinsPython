@@ -38,5 +38,5 @@ services:
     # Puedes ajustar el entrypoint o comando si tienes un script para convertir automáticamente el archivo XML a PDF
 
 networks:
-  my-network:
+  red-tigo:
     driver: bridge
