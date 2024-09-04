@@ -1,48 +1,18 @@
-pipeline {
-    agent any
-
-    stages {
-        stage('Checkout') {
-            steps {
-                // Clonar el repositorio que contiene docker-compose.yml
-                git url: 'https://github.com/Romeoteni188/JenkinsPython.git', branch: 'main'
-            }
-        }
-
-        stage('Start Dependency Track') {
-            steps {
-                // Levantar los contenedores usando docker-compose
-                sh 'docker-compose up -d'
-            }
-        }
-
-        stage('Run Dependency Track') {
-            steps {
-                // Esperar a que Dependency Track esté listo
-                sleep(time: 60, unit: 'SECONDS')
-                
-                // Ejecutar Dependency Track y generar el archivo XML
-                sh '''
-                    docker exec dependencytrack /bin/sh -c "dependency-track-command-to-run"
-                    docker exec dependencytrack /bin/sh -c "dependency-track-command-to-generate-xml"
-                    docker cp dependencytrack:/path/to/generated.xml ./workspace/generated.xml
-                '''
-            }
-        }
-
-        
+node {
+    stage('Checkout') {
+        git url: 'https://github.com/Romeoteni188/JenkinsPython.git', branch: 'main'
     }
 
-    post {
-        always {
-            // Limpiar el espacio de trabajo después de la ejecución
-            cleanWs()
-        }
-        success {
-            echo 'Dependency Track pipeline 2 completado exitosamente.'
-        }
-        failure {
-            echo 'El pipeline 2 de Dependency Track falló.'
-        }
+    stage('Start Dependency Track') {
+        sh 'docker-compose up -d'
+    }
+
+    stage('Run Dependency Track') {
+        sleep(time: 60, unit: 'SECONDS')
+        sh '''
+            docker exec dependencytrack /bin/sh -c "dependency-track-command-to-run"
+            docker exec dependencytrack /bin/sh -c "dependency-track-command-to-generate-xml"
+            docker cp dependencytrack:/path/to/generated.xml ./workspace/generated.xml
+        '''
     }
 }

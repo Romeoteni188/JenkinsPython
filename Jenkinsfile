@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git url: 'https://github.com/Romeoteni188/JenkinsPython.git', branch: "${params.BRANCH_NAME}"
-            }             
+            }
         }
 
         stage('Setup') {
@@ -52,9 +52,7 @@ pipeline {
 
         stage('Run Dependency Track') {
             steps {
-                script {
-                    load 'Jenkinsfile2'
-                }
+                build job: 'JobForJenkinsfile2', wait: true
             }
         }
 
@@ -66,9 +64,7 @@ pipeline {
 
         stage('Run Pandoc') {
             steps {
-                script {
-                    load 'Jenkinsfile3'
-                }
+                build job: 'JobForJenkinsfile3', wait: true
             }
         }
     }
