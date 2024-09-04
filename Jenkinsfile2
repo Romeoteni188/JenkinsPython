@@ -39,10 +39,10 @@ pipeline {
             cleanWs()
         }
         success {
-            echo 'Dependency Track pipeline completado exitosamente.'
+            echo 'Dependency Track pipeline 2 completado exitosamente.'
         }
         failure {
-            echo 'El pipeline de Dependency Track falló.'
+            echo 'El pipeline 2 de Dependency Track falló.'
         }
     }
 }

@@ -60,7 +60,7 @@ pipeline {
         stage('Run Dependency Track') {
             steps {
                 // Ejecuta el segundo pipeline
-                build job: 'Jenkinsfile2', wait: true
+                build load: 'Jenkinsfile2', wait: true
             }
         }
 
@@ -74,16 +74,11 @@ pipeline {
          stage('Run Pandoc') {
             steps {
                 // Ejecuta el segundo pipeline
-                build job: 'Jenkinsfile3', wait: true
-            }
+                build load: 'Jenkinsfile3', wait: true
+            }               
         }
 
-        stage('Convert XML to PDF with Pandoc') {
-            steps {
-                // Ejecuta el tercer pipeline
-                build job: 'ConvertXMLtoPDFPipeline', wait: true
-            }
-        }
+        
     }
 
     post {
@@ -92,10 +87,10 @@ pipeline {
             cleanWs()
         }
         success {
-            echo 'Pipeline completado exitosamente.'
+            echo 'Pipeline 1 completado exitosamente.'
         }
         failure {
-            echo 'El pipeline falló.'
+            echo 'El pipeline 1 falló.'
         }
     }
 }

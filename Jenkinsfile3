@@ -29,10 +29,10 @@ pipeline {
             cleanWs()
         }
         success {
-            echo 'Conversión de XML a PDF completada exitosamente.'
+            echo 'Pipeline 3 Conversión de XML a PDF completada exitosamente.'
         }
         failure {
-            echo 'La conversión de XML a PDF falló.'
+            echo 'Pipeline 3 La conversión de XML a PDF falló.'
         }
     }
 }
