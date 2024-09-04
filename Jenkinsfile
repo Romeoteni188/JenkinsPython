@@ -31,7 +31,7 @@ pipeline {
         stage('Linting') {
             steps {
                 // Corre el linter para verificar la calidad del código
-                echo 'linting'
+                echo 'Linting'
             }
         }
 
@@ -60,9 +60,7 @@ pipeline {
         stage('Run Dependency Track') {
             steps {
                 // Ejecuta el segundo pipeline
-                 script{
-                      load: 'Jenkinsfile3'
-                 }      
+                build job: 'Jenkinsfile2', wait: true
             }
         }
 
@@ -73,16 +71,12 @@ pipeline {
             }
         }
 
-         stage('Run Pandoc') {
+        stage('Run Pandoc') {
             steps {
-                // Ejecuta el segundo pipeline
-               script{
-                    load: 'Jenkinsfile3'
-               }
-            }               
+                // Ejecuta el tercer pipeline
+                build job: 'Jenkinsfile3', wait: true
+            }
         }
-
-        
     }
 
     post {
