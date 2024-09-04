@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git url: 'https://github.com/Romeoteni188/JenkinsPython.git', branch: "${params.BRANCH_NAME}"
-            }
+            }             
         }
 
         stage('Setup') {

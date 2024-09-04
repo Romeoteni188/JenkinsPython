@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Clonar el repositorio que contiene docker-compose.yml
-                git url: 'https://github.com/Romeoteni188/YourDependencyTrackRepo.git', branch: 'main'
+                git url: 'https://github.com/Romeoteni188/JenkinsPython.git', branch: 'main'
             }
         }
 
