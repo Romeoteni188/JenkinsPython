@@ -58,12 +58,11 @@ pipeline {
         }
 
         stage('Run Dependency Track') {
-                steps {
-                    // Ejecuta el segundo pipeline
-                        script{
-                            load: 'Jenkinsfile3'
-                    }
-                }      
+            steps {
+                // Ejecuta el segundo pipeline
+                 script{
+                      load: 'Jenkinsfile3'
+                 }      
             }
         }
 
