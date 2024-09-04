@@ -60,7 +60,7 @@ pipeline {
         stage('Run Dependency Track') {
             steps {
                 // Ejecuta el segundo pipeline
-                build job: 'DependencyTrackPipeline', wait: true
+                build job: 'Jenkinsfile2', wait: true
             }
         }
 
@@ -68,6 +68,13 @@ pipeline {
             steps {
                 // Espera 4 minutos antes de ejecutar el siguiente pipeline
                 sleep(time: 4, unit: 'MINUTES')
+            }
+        }
+
+         stage('Run Pandoc') {
+            steps {
+                // Ejecuta el segundo pipeline
+                build job: 'Jenkinsfile3', wait: true
             }
         }
 
