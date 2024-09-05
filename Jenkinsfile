@@ -50,9 +50,23 @@ pipeline {
             }
         }
 
+        stage('Start Dependency Track') {
+            steps {
+                sh 'docker-compose up -d'
+            }
+        }
+
         stage('Run Dependency Track') {
             steps {
-                build job: 'JobForJenkinsfile2', wait: true
+                script {
+                    // Esperar 60 segundos para que Dependency Track esté listo
+                    sleep(time: 60, unit: 'SECONDS')
+                }
+                sh '''
+                    docker exec dependencytrack /bin/sh -c "dependency-track-command-to-run"
+                    docker exec dependencytrack /bin/sh -c "dependency-track-command-to-generate-xml"
+                    docker cp dependencytrack:/path/to/generated.xml ./workspace/generated.xml
+                '''
             }
         }
 
@@ -65,6 +79,23 @@ pipeline {
         stage('Run Pandoc') {
             steps {
                 build job: 'JobForJenkinsfile3', wait: true
+            }
+        }
+
+        stage('Convert XML to PDF') {
+            steps {
+                sh '''
+                    docker run --rm -v $(pwd)/workspace:/workspace pandoc/core pandoc /workspace/generated.xml -o /workspace/output.pdf
+                    cp /workspace/output.pdf ./output.pdf
+                '''
+            }
+        }
+
+        stage('Stop Services') {
+            steps {
+                sleep(time: 10, unit: 'MINUTES')
+                // Si es necesario detener contenedores, puedes agregar los comandos aquí
+                // sh 'docker-compose down' (si necesitas detener los servicios)
             }
         }
     }
