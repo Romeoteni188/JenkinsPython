@@ -28,7 +28,7 @@ services:
       restart_policy:
         condition: on-failure
     ports:
-      - '9001:8080'
+      - '9001:8081'
     volumes:
       - 'dependency-track:/data'
     networks:
