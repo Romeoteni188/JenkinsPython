@@ -63,9 +63,9 @@ pipeline {
                     sleep(time: 60, unit: 'SECONDS')
                 }
                 sh '''
-                    docker exec dependencytrack /bin/sh -c "dependency-track-command-to-run"
-                    docker exec dependencytrack /bin/sh -c "dependency-track-command-to-generate-xml"
-                    docker cp dependencytrack:/path/to/generated.xml ./workspace/generated.xml
+                    docker exec dependencytrack/apiserver /bin/sh -c "dependency-track-command-to-run"
+                    docker exec dependencytrack/apiserver /bin/sh -c "dependency-track-command-to-generate-xml"
+                    docker cp dependencytrack/apiserver:/path/to/generated.xml ./workspace/generated.xml
                 '''
             }
         }
