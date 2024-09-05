@@ -52,7 +52,7 @@ pipeline {
 
         stage('Start Dependency Track') {
             steps {
-                sh 'docker-compose up -d'
+                sh 'dockercompose.yml up -d'
             }
         }
 

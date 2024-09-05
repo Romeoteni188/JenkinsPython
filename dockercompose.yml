@@ -5,7 +5,7 @@ services:
     image: dependencytrack/bundled:latest
     container_name: dependencytrack
     ports:
-      - "8080:8080" # Ajusta el puerto si es necesario
+      - "8585:8080" # Ajusta el puerto si es necesario
     environment:
       - DATABASE_URL=jdbc:postgresql://postgres:5432/dependencytrack
       - DATABASE_USERNAME=dependencytrack
