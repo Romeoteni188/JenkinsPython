@@ -76,11 +76,11 @@ pipeline {
             }
         }
 
-        stage('Run Pandoc') {
-            steps {
-                build job: 'JobForJenkinsfile3', wait: true
-            }
-        }
+        // stage('Run Pandoc') {
+        //     steps {
+        //         build job: 'JobForJenkinsfile3', wait: true
+        //     }
+        // }
 
         stage('Convert XML to PDF') {
             steps {
