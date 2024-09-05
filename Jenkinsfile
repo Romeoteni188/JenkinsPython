@@ -63,8 +63,8 @@ pipeline {
                     sleep(time: 60, unit: 'SECONDS')
                 }
                 sh '''
-                    docker exec pythonjenkins_dtrack-apiserver_1 /bin/sh -c "dependency-track-command-to-run"
-                    docker exec pythonjenkins_dtrack-apiserver_1 /bin/sh -c "dependency-track-command-to-generate-xml"
+                    docker exec pythonjenkins_dtrack-apiserver_1 /bin/sh -c "java -jar /opt/owasp/dependency-track/dependency-track-apiserver.jar run"
+                    docker exec pythonjenkins_dtrack-apiserver_1 /bin/sh -c "java -jar /opt/owasp/dependency-track/dependency-track-apiserver.jar generate-xml"
                     docker cp pythonjenkins_dtrack-apiserver_1:/path/to/generated.xml ./workspace/generated.xml
                 '''
             }
@@ -85,8 +85,8 @@ pipeline {
         stage('Convert XML to PDF') {
             steps {
                 sh '''
-                    docker run --rm -v $(pwd)/workspace:/workspace pandoc/core pandoc /workspace/generated.xml -o /workspace/output.pdf
-                    cp /workspace/output.pdf ./output.pdf
+                     docker run --rm -v /home/romeo188/dependencytrack/xml_output:/workspace pandoc/core pandoc /workspace/generated.xml -o /workspace/output.pdf
+                     cp /home/romeo188/dependencytrack/xml_output/output.pdf ./output.pdf
                 '''
             }
         }
