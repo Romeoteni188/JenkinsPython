@@ -1,0 +1,70 @@
+version: '3.7'
+
+#####################################################
+# This Docker Compose file contains four services:
+# - Dependency-Track API Server
+# - Dependency-Track FrontEnd
+# - Pandoc for PDF Conversion
+# - PostgreSQL Database
+#####################################################
+
+volumes:
+  dependency-track:
+  postgres-data:
+
+networks:
+  red-tigo:
+    driver: bridge
+
+services:
+  dtrack-apiserver:
+    image: dependencytrack/apiserver
+    deploy:
+      resources:
+        limits:
+          memory: 12288m
+        reservations:
+          memory: 8192m
+      restart_policy:
+        condition: on-failure
+    ports:
+      - '8585:8080'
+    volumes:
+      - 'dependency-track:/data'
+    networks:
+      - red-tigo
+    restart: unless-stopped
+
+  dtrack-frontend:
+    image: dependencytrack/frontend
+    depends_on:
+      - dtrack-apiserver
+    environment:
+      - API_BASE_URL=http://dtrack-apiserver:8080
+    ports:
+      - "8590:8080"
+    networks:
+      - red-tigo
+    restart: unless-stopped
+
+  pandoc:
+    image: pandoc/core
+    container_name: pandoc
+    networks:
+      - red-tigo
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgresql
+      POSTGRES_PASSWORD: chocolate
+      POSTGRES_DB: libro
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - red-tigo
+    restart: unless-stopped
